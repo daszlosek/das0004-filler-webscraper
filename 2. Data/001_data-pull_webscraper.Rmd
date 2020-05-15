@@ -1,0 +1,99 @@
+---
+title: "DAS10005 -webscraper"
+author: "Donald Szlosek"
+date: "July 3rd, 2019"
+output:
+  html_document:
+    toc: yes
+    toc_depth: 3
+    toc_float:
+      collapsed: no
+---
+
+```{r message=FALSE, echo=FALSE}
+
+rm(list=ls())
+
+packages = c('rmarkdown', 'plyr', 'dplyr','magick','tesseract','here','rvest')
+
+package.check <- lapply(packages, FUN = function(x) {
+    if (!require(x, character.only = TRUE)) {
+        install.packages(x, dependencies = TRUE)
+        library(x, character.only = TRUE, quietly = TRUE, warn.conflicts = FALSE)
+    }
+})
+
+
+
+```
+
+
+
+
+```{r}
+
+http_file <- "https://www.animefillerlist.com/shows/magic-knight-rayearth"
+
+html_raw <- read_html(http_file)
+
+
+
+
+name <- sapply(strsplit(http_file, "/\\s*"), tail, 1)
+
+raw_table <- rvest::html_table(html_raw) %>% data.frame()
+
+
+table <- raw_table %>% group_by(Type) %>% count() %>% ungroup() %>% mutate(percent = round(n/ sum(n),2))
+
+filler <- raw_table %>% filter(Type == "Filler") %>% count()
+
+filler <- filler$n
+total_episodes = sum(table$n)
+
+
+fill_per <- round(filler/total_episodes*100,2)
+
+
+paste0(name, ": has ",total_episodes," total episodes with ",fill_per,"% (",filler," episodes) being filler")
+
+table
+
+
+head(raw_table)
+```
+
+
+
+
+
+
+
+
+```{r}
+head(raw_table)
+```
+
+
+
+
+
+```{r}
+Bike(8)
+
+
+dplyr::select()
+
+table <- raw_table %>% group_by(Type) %>% count() %>% ungroup() %>% mutate(percent = round(n/ sum(n),2))
+
+
+
+
+
+head(table)
+
+class(table)
+
+
+ 
+```
